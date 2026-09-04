@@ -163,41 +163,7 @@ body {
   pointer-events: none;
 }
 
-/* Tyndall Laser Rays Container */
-.tyndall-laser-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.laser-beam {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 2px;
-  width: 75vw;
-  transform-origin: 0% 50%;
-  background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 25%, rgba(255, 255, 255, 0.2) 60%, rgba(255, 255, 255, 0) 100%);
-  box-shadow: 0 0 6px #ffffff, 0 0 12px rgba(255, 255, 255, 0.9);
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.beam-1  { transform: rotate(0deg) scaleX(0);   animation: laserBeam1 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.05s; }
-.beam-2  { transform: rotate(45deg) scaleX(0);  animation: laserBeam2 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.10s; }
-.beam-3  { transform: rotate(90deg) scaleX(0);  animation: laserBeam3 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.15s; }
-.beam-4  { transform: rotate(135deg) scaleX(0); animation: laserBeam4 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.20s; }
-.beam-5  { transform: rotate(180deg) scaleX(0); animation: laserBeam5 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.25s; }
-.beam-6  { transform: rotate(225deg) scaleX(0); animation: laserBeam6 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.30s; }
-.beam-7  { transform: rotate(270deg) scaleX(0); animation: laserBeam7 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.35s; }
-.beam-8  { transform: rotate(315deg) scaleX(0); animation: laserBeam8 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.40s; }
-
-/* Sharp-Edged ENGINEERING Typography - ONLY Text on Screen */
+/* Sharp-Edged ENGINEERING Typography - ONLY Text on Arrival Screen */
 .intro-title {
   font-family: var(--font-sharp);
   font-size: 5.4rem;
@@ -251,15 +217,6 @@ body {
     transform: translateZ(0) scale(1);
   }
 }
-
-@keyframes laserBeam1 { 0% { opacity: 0; transform: rotate(0deg) scaleX(0); } 60% { opacity: 1; transform: rotate(0deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(0deg) scaleX(1); } }
-@keyframes laserBeam2 { 0% { opacity: 0; transform: rotate(45deg) scaleX(0); } 60% { opacity: 1; transform: rotate(45deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(45deg) scaleX(1); } }
-@keyframes laserBeam3 { 0% { opacity: 0; transform: rotate(90deg) scaleX(0); } 60% { opacity: 1; transform: rotate(90deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(90deg) scaleX(1); } }
-@keyframes laserBeam4 { 0% { opacity: 0; transform: rotate(135deg) scaleX(0); } 60% { opacity: 1; transform: rotate(135deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(135deg) scaleX(1); } }
-@keyframes laserBeam5 { 0% { opacity: 0; transform: rotate(180deg) scaleX(0); } 60% { opacity: 1; transform: rotate(180deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(180deg) scaleX(1); } }
-@keyframes laserBeam6 { 0% { opacity: 0; transform: rotate(225deg) scaleX(0); } 60% { opacity: 1; transform: rotate(225deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(225deg) scaleX(1); } }
-@keyframes laserBeam7 { 0% { opacity: 0; transform: rotate(270deg) scaleX(0); } 60% { opacity: 1; transform: rotate(270deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(270deg) scaleX(1); } }
-@keyframes laserBeam8 { 0% { opacity: 0; transform: rotate(315deg) scaleX(0); } 60% { opacity: 1; transform: rotate(315deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(315deg) scaleX(1); } }
 
 @keyframes glossyLaserSweep {
   0% {
