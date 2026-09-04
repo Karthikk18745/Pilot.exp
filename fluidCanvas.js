@@ -1,7 +1,7 @@
 /**
  * Viscous Blackish-Ash Neon Liquid Background Engine
- * Interactive Liquid Scoop Physics - Butter / Ice Cream Flow System
- * Fluid streams and deforms dynamically along the cursor path with millisecond viscous inertia.
+ * Interactive Liquid Scoop Physics - Directional Flow & Reversal System
+ * Liquid flows in cursor path within liquid flow area, instantly reversing flow on opposite movement.
  */
 
 class ViscousLiquidCanvas {
@@ -19,12 +19,14 @@ class ViscousLiquidCanvas {
     this.lastMouseX = this.mouseX;
     this.lastMouseY = this.mouseY;
     
-    // Trailing fluid scoop position (millisecond delay / viscous inertia)
+    // Trailing fluid position (viscous inertia lerp)
     this.trailX = this.mouseX;
     this.trailY = this.mouseY;
     this.velocity = 0;
     this.vx = 0;
     this.vy = 0;
+    this.flowVx = 0;
+    this.flowVy = 0;
     this.isMoving = false;
     this.moveTimeout = null;
 
@@ -34,9 +36,9 @@ class ViscousLiquidCanvas {
     this.scrollTimeout = null;
     this.lastScrollY = window.scrollY;
     
-    // Cursor trail history (object pool)
+    // Sleek free-flowing trail history (max 14 points to prevent smudges)
     this.trailPoints = [];
-    this.maxTrailPoints = 32;
+    this.maxTrailPoints = 14;
 
     // Liquid Waves
     this.waves = [
@@ -78,10 +80,9 @@ class ViscousLiquidCanvas {
       this.droplets.push({
         x: Math.random() * this.width,
         y: Math.random() * this.height,
-        radius: Math.random() * 70 + 25,
-        baseRadius: Math.random() * 70 + 25,
-        vx: (Math.random() - 0.5) * 1.0,
-        vy: (Math.random() - 0.5) * 1.0,
+        radius: Math.random() * 65 + 20,
+        vx: (Math.random() - 0.5) * 0.9,
+        vy: (Math.random() - 0.5) * 0.9,
         pulse: Math.random() * Math.PI * 2,
         pulseSpeed: Math.random() * 0.03 + 0.01,
         glowColor: i % 3 === 0 
@@ -116,16 +117,40 @@ class ViscousLiquidCanvas {
     
     this.lastMouseX = this.mouseX;
     this.lastMouseY = this.mouseY;
-    
-    this.isMoving = true;
-    clearTimeout(this.moveTimeout);
-    this.moveTimeout = setTimeout(() => {
-      this.isMoving = false;
-    }, 150);
 
-    // Boost fluid wave speed slightly on fast mouse movement
-    const boost = Math.min(this.velocity * 0.08, 4.0);
-    this.targetSpeedMultiplier = 1.0 + boost;
+    // Check if cursor is in the liquid flow area (y >= 20% height of page)
+    const isInFlowArea = (this.mouseY >= this.height * 0.20);
+
+    if (isInFlowArea) {
+      // Detect direction reversal (moving opposite to current fluid flow)
+      const dot = dx * this.flowVx + dy * this.flowVy;
+      
+      if (dot < -12) {
+        // Cursor moved opposite to current flow direction inside flow area!
+        // Instantly reverse fluid momentum & flush old trail to prevent smudgy bulky overlaps
+        this.flowVx = dx;
+        this.flowVy = dy;
+        this.trailPoints = [];
+      } else {
+        // Smoothly blend flow momentum vector
+        this.flowVx += (dx - this.flowVx) * 0.35;
+        this.flowVy += (dy - this.flowVy) * 0.35;
+      }
+
+      this.isMoving = true;
+      clearTimeout(this.moveTimeout);
+      this.moveTimeout = setTimeout(() => {
+        this.isMoving = false;
+      }, 120);
+
+      const boost = Math.min(this.velocity * 0.06, 3.5);
+      this.targetSpeedMultiplier = 1.0 + boost;
+    } else {
+      // Outside flow area: damp momentum
+      this.flowVx *= 0.5;
+      this.flowVy *= 0.5;
+      this.isMoving = false;
+    }
   }
 
   handleScroll() {
@@ -143,21 +168,23 @@ class ViscousLiquidCanvas {
   }
 
   updatePhysics() {
-    // Viscous lerp trailing behind cursor (millisecond delay / butter scoop inertia)
-    const lerpFactor = 0.14; // smooth viscous lag
+    // Viscous lerp trailing behind cursor (millisecond delay)
+    const lerpFactor = 0.18;
     this.trailX += (this.mouseX - this.trailX) * lerpFactor;
     this.trailY += (this.mouseY - this.trailY) * lerpFactor;
 
-    // Add trail point when cursor moves
-    if (this.isMoving || Math.abs(this.mouseX - this.trailX) > 1) {
-      const radius = Math.min(Math.max(this.velocity * 1.5, 25), 90);
+    const isInFlowArea = (this.mouseY >= this.height * 0.20);
+
+    // Add trail points ONLY when moving inside the liquid flow area
+    if (isInFlowArea && (this.isMoving || Math.abs(this.mouseX - this.trailX) > 2)) {
+      const pointRadius = Math.min(Math.max(this.velocity * 0.6, 8), 24);
       this.trailPoints.unshift({
         x: this.trailX,
         y: this.trailY,
-        radius: radius,
-        alpha: 0.85,
-        vx: this.vx * 0.2,
-        vy: this.vy * 0.2
+        radius: pointRadius,
+        alpha: 0.9,
+        vx: this.flowVx * 0.15,
+        vy: this.flowVy * 0.15
       });
 
       if (this.trailPoints.length > this.maxTrailPoints) {
@@ -165,23 +192,19 @@ class ViscousLiquidCanvas {
       }
     }
 
-    // Decay trail points
+    // Fast decay of trail points to keep stream crisp and free-flowing (no smudge)
     for (let i = 0; i < this.trailPoints.length; i++) {
       const p = this.trailPoints[i];
-      p.alpha *= 0.92;
-      p.radius *= 0.97;
+      p.alpha *= 0.83; // fast clean decay
+      p.radius *= 0.96;
       p.x += p.vx;
       p.y += p.vy;
     }
 
-    // Filter out invisible points
-    this.trailPoints = this.trailPoints.filter(p => p.alpha > 0.02);
+    this.trailPoints = this.trailPoints.filter(p => p.alpha > 0.05);
 
-    // Smooth speed multiplier decay
+    // Speed multiplier decay
     this.speedMultiplier += (this.targetSpeedMultiplier - this.speedMultiplier) * 0.1;
-    if (!this.isMoving && this.targetSpeedMultiplier > 1.0) {
-      this.targetSpeedMultiplier += (1.0 - this.targetSpeedMultiplier) * 0.05;
-    }
   }
 
   animate() {
@@ -191,34 +214,33 @@ class ViscousLiquidCanvas {
     this.ctx.fillStyle = '#0a0a0f';
     this.ctx.fillRect(0, 0, this.width, this.height);
 
-    // 1. Render Viscous Liquid Droplets (Drifting & Pulled by Cursor)
+    // 1. Render Viscous Droplets
     for (let d of this.droplets) {
-      // Viscous suction force towards trailing cursor position
-      const dx = this.trailX - d.x;
-      const dy = this.trailY - d.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (this.mouseY >= this.height * 0.20) {
+        const dx = this.trailX - d.x;
+        const dy = this.trailY - d.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (dist < 280) {
-        const pull = (1 - dist / 280) * 0.06;
-        d.vx += dx * pull * 0.01;
-        d.vy += dy * pull * 0.01;
+        if (dist < 240) {
+          const pull = (1 - dist / 240) * 0.05;
+          d.vx += dx * pull * 0.01;
+          d.vy += dy * pull * 0.01;
+        }
       }
 
-      // Damping
       d.vx *= 0.98;
       d.vy *= 0.98;
 
-      d.x += (d.vx + (Math.random() - 0.5) * 0.3) * this.speedMultiplier;
-      d.y += (d.vy + (Math.random() - 0.5) * 0.3) * this.speedMultiplier;
+      d.x += (d.vx + (Math.random() - 0.5) * 0.2) * this.speedMultiplier;
+      d.y += (d.vy + (Math.random() - 0.5) * 0.2) * this.speedMultiplier;
       d.pulse += d.pulseSpeed * this.speedMultiplier;
 
-      // Wrap around edges smoothly
       if (d.x < -d.radius) d.x = this.width + d.radius;
       if (d.x > this.width + d.radius) d.x = -d.radius;
       if (d.y < -d.radius) d.y = this.height + d.radius;
       if (d.y > this.height + d.radius) d.y = -d.radius;
 
-      const currentRadius = d.radius + Math.sin(d.pulse) * 10;
+      const currentRadius = d.radius + Math.sin(d.pulse) * 8;
 
       const grad = this.ctx.createRadialGradient(
         d.x, d.y, currentRadius * 0.1,
@@ -234,9 +256,8 @@ class ViscousLiquidCanvas {
       this.ctx.fill();
     }
 
-    // 2. Render Interactive Viscous Liquid Scoop Ribbon Trail (Butter / Ice Cream Scoop Effect)
+    // 2. Render Sleek Free-Flowing Liquid Stream (Applicable inside Flow Area, Zero Smudge)
     if (this.trailPoints.length > 1) {
-      // Draw smooth viscous liquid ribbon connecting cursor trail points
       this.ctx.beginPath();
       this.ctx.moveTo(this.trailPoints[0].x, this.trailPoints[0].y);
 
@@ -246,40 +267,25 @@ class ViscousLiquidCanvas {
         this.ctx.quadraticCurveTo(this.trailPoints[i].x, this.trailPoints[i].y, xc, yc);
       }
 
-      const headRadius = this.trailPoints[0].radius;
-      this.ctx.lineWidth = headRadius * 1.2;
+      const headRadius = Math.max(this.trailPoints[0].radius, 10);
+      this.ctx.lineWidth = headRadius * 0.9;
       this.ctx.lineCap = 'round';
       this.ctx.lineJoin = 'round';
 
-      // Viscous specular liquid glow stroke
+      // Sleek non-smudgy neon liquid stroke
       const trailGrad = this.ctx.createLinearGradient(
         this.trailPoints[0].x, this.trailPoints[0].y,
         this.trailPoints[this.trailPoints.length - 1].x, this.trailPoints[this.trailPoints.length - 1].y
       );
-      trailGrad.addColorStop(0, 'rgba(255, 255, 255, 0.22)');
-      trailGrad.addColorStop(0.4, 'rgba(160, 224, 255, 0.14)');
-      trailGrad.addColorStop(1, 'rgba(200, 160, 255, 0)');
+      trailGrad.addColorStop(0, 'rgba(255, 255, 255, 0.40)');
+      trailGrad.addColorStop(0.5, 'rgba(160, 224, 255, 0.20)');
+      trailGrad.addColorStop(1, 'rgba(160, 224, 255, 0)');
 
       this.ctx.strokeStyle = trailGrad;
       this.ctx.stroke();
-
-      // Specular liquid scoop core highlight
-      for (let p of this.trailPoints) {
-        if (p.alpha > 0.1) {
-          const sg = this.ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-          sg.addColorStop(0, `rgba(255, 255, 255, ${p.alpha * 0.35})`);
-          sg.addColorStop(0.5, `rgba(160, 224, 255, ${p.alpha * 0.15})`);
-          sg.addColorStop(1, 'rgba(10, 10, 15, 0)');
-
-          this.ctx.fillStyle = sg;
-          this.ctx.beginPath();
-          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          this.ctx.fill();
-        }
-      }
     }
 
-    // 3. Render Viscous Liquid Waves (Displaced by Cursor Position)
+    // 3. Render Viscous Liquid Waves
     for (let w of this.waves) {
       w.offset += w.speed * this.speedMultiplier;
 
@@ -287,16 +293,16 @@ class ViscousLiquidCanvas {
       this.ctx.moveTo(0, this.height);
 
       for (let x = 0; x <= this.width; x += 15) {
-        // Wave base height
         let waveY = Math.sin(x * w.wavelength + w.offset) * w.amplitude + (this.height * 0.55);
 
-        // Displace wave height dynamically based on cursor proximity (scooping wave effect)
-        const dx = x - this.trailX;
-        const dist = Math.abs(dx);
-        if (dist < 260) {
-          const pushFactor = (1 - dist / 260);
-          const dy = this.trailY - (this.height * 0.55);
-          waveY += Math.sin(dist * 0.03 - w.offset * 2) * pushFactor * (dy * 0.25);
+        if (this.mouseY >= this.height * 0.20) {
+          const dx = x - this.trailX;
+          const dist = Math.abs(dx);
+          if (dist < 240) {
+            const pushFactor = (1 - dist / 240);
+            const dy = this.trailY - (this.height * 0.55);
+            waveY += Math.sin(dist * 0.03 - w.offset * 2) * pushFactor * (dy * 0.20);
+          }
         }
 
         if (x === 0) {
@@ -313,27 +319,32 @@ class ViscousLiquidCanvas {
       this.ctx.fillStyle = w.color;
       this.ctx.fill();
 
-      // Specular liquid top edge shine
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
       this.ctx.lineWidth = 1.5;
       this.ctx.stroke();
     }
 
-    // 4. Cursor Scoop Focal Point Specular Highlight Ring
-    if (this.isMoving) {
-      const fg = this.ctx.createRadialGradient(
-        this.trailX, this.trailY, 0,
-        this.trailX, this.trailY, 40
-      );
-      fg.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
-      fg.addColorStop(0.4, 'rgba(160, 224, 255, 0.20)');
-      fg.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    // 4. White Specular Moving Focal Point Dot (ALWAYS Crisp & Ultra-Smooth)
+    const dotAlpha = (this.mouseY >= this.height * 0.15) ? 0.95 : 0.4;
+    const dotGrad = this.ctx.createRadialGradient(
+      this.trailX, this.trailY, 0,
+      this.trailX, this.trailY, 18
+    );
+    dotGrad.addColorStop(0, `rgba(255, 255, 255, ${dotAlpha})`);
+    dotGrad.addColorStop(0.3, `rgba(255, 255, 255, ${dotAlpha * 0.6})`);
+    dotGrad.addColorStop(0.7, `rgba(160, 224, 255, ${dotAlpha * 0.2})`);
+    dotGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
-      this.ctx.fillStyle = fg;
-      this.ctx.beginPath();
-      this.ctx.arc(this.trailX, this.trailY, 40, 0, Math.PI * 2);
-      this.ctx.fill();
-    }
+    this.ctx.fillStyle = dotGrad;
+    this.ctx.beginPath();
+    this.ctx.arc(this.trailX, this.trailY, 18, 0, Math.PI * 2);
+    this.ctx.fill();
+
+    // Sharp white core dot
+    this.ctx.fillStyle = `rgba(255, 255, 255, ${dotAlpha})`;
+    this.ctx.beginPath();
+    this.ctx.arc(this.trailX, this.trailY, 3.5, 0, Math.PI * 2);
+    this.ctx.fill();
 
     requestAnimationFrame(() => this.animate());
   }
@@ -343,4 +354,5 @@ class ViscousLiquidCanvas {
 window.initViscousCanvas = function(id) {
   return new ViscousLiquidCanvas(id);
 };
+
 
