@@ -180,22 +180,22 @@ body {
   top: 0;
   left: 0;
   height: 2px;
-  width: 80vw;
+  width: 75vw;
   transform-origin: 0% 50%;
-  background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 20%, rgba(255, 255, 255, 0.3) 60%, rgba(255, 255, 255, 0) 100%);
-  box-shadow: 0 0 6px #ffffff, 0 0 15px rgba(255, 255, 255, 0.9);
+  background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 25%, rgba(255, 255, 255, 0.2) 60%, rgba(255, 255, 255, 0) 100%);
+  box-shadow: 0 0 6px #ffffff, 0 0 12px rgba(255, 255, 255, 0.9);
   opacity: 0;
-  animation: laserBeamEmergence 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
-.beam-1  { transform: rotate(0deg);   animation-delay: 0.05s; }
-.beam-2  { transform: rotate(45deg);  animation-delay: 0.10s; }
-.beam-3  { transform: rotate(90deg);  animation-delay: 0.15s; }
-.beam-4  { transform: rotate(135deg); animation-delay: 0.20s; }
-.beam-5  { transform: rotate(180deg); animation-delay: 0.25s; }
-.beam-6  { transform: rotate(225deg); animation-delay: 0.30s; }
-.beam-7  { transform: rotate(270deg); animation-delay: 0.35s; }
-.beam-8  { transform: rotate(315deg); animation-delay: 0.40s; }
+.beam-1  { transform: rotate(0deg) scaleX(0);   animation: laserBeam1 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.05s; }
+.beam-2  { transform: rotate(45deg) scaleX(0);  animation: laserBeam2 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.10s; }
+.beam-3  { transform: rotate(90deg) scaleX(0);  animation: laserBeam3 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.15s; }
+.beam-4  { transform: rotate(135deg) scaleX(0); animation: laserBeam4 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.20s; }
+.beam-5  { transform: rotate(180deg) scaleX(0); animation: laserBeam5 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.25s; }
+.beam-6  { transform: rotate(225deg) scaleX(0); animation: laserBeam6 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.30s; }
+.beam-7  { transform: rotate(270deg) scaleX(0); animation: laserBeam7 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.35s; }
+.beam-8  { transform: rotate(315deg) scaleX(0); animation: laserBeam8 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.40s; }
 
 /* Sharp-Edged ENGINEERING Typography - ONLY Text on Screen */
 .intro-title {
@@ -212,17 +212,16 @@ body {
   
   /* Glossy Neon White Laser Text Shadow - Sharp white emission directly from letters */
   text-shadow: 
-    0 0 2px #ffffff,
-    0 0 6px #ffffff,
-    0 0 14px #ffffff,
-    0 0 28px rgba(255, 255, 255, 0.95),
-    0 0 55px rgba(255, 255, 255, 0.8),
-    0 0 90px rgba(255, 255, 255, 0.6);
+    0 0 4px #ffffff,
+    0 0 12px #ffffff,
+    0 0 24px rgba(255, 255, 255, 0.95),
+    0 0 50px rgba(255, 255, 255, 0.75);
     
   opacity: 0;
-  transform: translate3d(0, 0, -300px) scale(0.2);
-  animation: wormholeSharpExit 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateZ(0) scale(0.2);
+  animation: wormholeSharpExit 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .intro-title .letter {
@@ -235,59 +234,32 @@ body {
   position: relative;
 }
 
-/* Glossy light sweep overlay on title letters */
-.intro-title::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 100%);
-  transform: skewX(-25deg);
-  animation: glossyLaserSweep 1.6s ease-in-out infinite 0.4s;
-  pointer-events: none;
-  mix-blend-mode: overlay;
-}
-
+/* Pure GPU Accelerated Wormhole Emergence Animation */
 @keyframes wormholeSharpExit {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, -400px) scale(0.18);
-    letter-spacing: 4px;
+    transform: translateZ(0) scale(0.2);
   }
   60% {
     opacity: 1;
   }
   90% {
-    transform: translate3d(0, 0, 0) scale(1.03);
-    letter-spacing: 17px;
+    transform: translateZ(0) scale(1.02);
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-    letter-spacing: 16px;
+    transform: translateZ(0) scale(1);
   }
 }
 
-@keyframes laserBeamEmergence {
-  0% {
-    opacity: 0;
-    width: 0;
-  }
-  40% {
-    opacity: 1;
-    width: 50vw;
-  }
-  80% {
-    opacity: 0.9;
-    width: 80vw;
-  }
-  100% {
-    opacity: 0.4;
-    width: 85vw;
-  }
-}
+@keyframes laserBeam1 { 0% { opacity: 0; transform: rotate(0deg) scaleX(0); } 60% { opacity: 1; transform: rotate(0deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(0deg) scaleX(1); } }
+@keyframes laserBeam2 { 0% { opacity: 0; transform: rotate(45deg) scaleX(0); } 60% { opacity: 1; transform: rotate(45deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(45deg) scaleX(1); } }
+@keyframes laserBeam3 { 0% { opacity: 0; transform: rotate(90deg) scaleX(0); } 60% { opacity: 1; transform: rotate(90deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(90deg) scaleX(1); } }
+@keyframes laserBeam4 { 0% { opacity: 0; transform: rotate(135deg) scaleX(0); } 60% { opacity: 1; transform: rotate(135deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(135deg) scaleX(1); } }
+@keyframes laserBeam5 { 0% { opacity: 0; transform: rotate(180deg) scaleX(0); } 60% { opacity: 1; transform: rotate(180deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(180deg) scaleX(1); } }
+@keyframes laserBeam6 { 0% { opacity: 0; transform: rotate(225deg) scaleX(0); } 60% { opacity: 1; transform: rotate(225deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(225deg) scaleX(1); } }
+@keyframes laserBeam7 { 0% { opacity: 0; transform: rotate(270deg) scaleX(0); } 60% { opacity: 1; transform: rotate(270deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(270deg) scaleX(1); } }
+@keyframes laserBeam8 { 0% { opacity: 0; transform: rotate(315deg) scaleX(0); } 60% { opacity: 1; transform: rotate(315deg) scaleX(0.8); } 100% { opacity: 0.4; transform: rotate(315deg) scaleX(1); } }
 
 @keyframes glossyLaserSweep {
   0% {
