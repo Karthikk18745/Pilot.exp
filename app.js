@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
       introOverlay.classList.add('fade-out');
       setTimeout(() => {
         introOverlay.style.display = 'none';
-      }, 400);
+      }, 350);
     }
   };
 
-  // Auto dismiss intro smoothly after 2300ms (allows full wormhole exit & laser ray flow display)
-  setTimeout(dismissIntro, 2300);
+  // Auto dismiss intro smoothly after 2000ms
+  setTimeout(dismissIntro, 2000);
   introOverlay.addEventListener('click', dismissIntro);
   window.addEventListener('keydown', dismissIntro);
 

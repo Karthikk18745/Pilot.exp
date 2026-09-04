@@ -139,21 +139,20 @@ body {
   transform: translateY(-2px);
 }
 
-/* Full-Page Intro Animation Overlay */
+/* Full-Page Intro Animation Screen */
 .intro-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #020204;
+  background: #000000;
   z-index: 9999;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+  transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
   will-change: opacity, visibility;
   perspective: 1000px;
 }
@@ -164,21 +163,7 @@ body {
   pointer-events: none;
 }
 
-/* Wormhole Neon Light Tunnel Flare */
-.wormhole-light-tunnel {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.4) 20%, rgba(160, 224, 255, 0.15) 45%, rgba(2, 2, 4, 0) 70%);
-  opacity: 0;
-  transform: scale(0.3);
-  animation: wormholeTunnelPulse 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity;
-  z-index: 1;
-}
-
-/* Tyndall Laser Beams & Center Flare */
+/* Tyndall Laser Rays Container */
 .tyndall-laser-container {
   position: absolute;
   top: 50%;
@@ -190,50 +175,34 @@ body {
   z-index: 2;
 }
 
-.laser-center-flare {
-  position: absolute;
-  top: -160px;
-  left: -160px;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffffff 0%, rgba(255, 255, 255, 0.95) 25%, rgba(255, 255, 255, 0.35) 55%, rgba(255, 255, 255, 0) 80%);
-  animation: laserCenterCore 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  pointer-events: none;
-}
-
 .laser-beam {
   position: absolute;
   top: 0;
   left: 0;
-  height: 3px;
-  width: 75vw;
+  height: 2px;
+  width: 80vw;
   transform-origin: 0% 50%;
-  background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 25%, rgba(255, 255, 255, 0.2) 65%, rgba(255, 255, 255, 0) 100%);
-  box-shadow: 0 0 10px #ffffff, 0 0 20px rgba(255, 255, 255, 0.85);
+  background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 20%, rgba(255, 255, 255, 0.3) 60%, rgba(255, 255, 255, 0) 100%);
+  box-shadow: 0 0 6px #ffffff, 0 0 15px rgba(255, 255, 255, 0.9);
   opacity: 0;
-  animation: laserBeamEmergence 1.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: laserBeamEmergence 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.beam-1  { transform: rotate(0deg);   animation-delay: 0.1s; }
-.beam-2  { transform: rotate(30deg);  animation-delay: 0.12s; }
-.beam-3  { transform: rotate(60deg);  animation-delay: 0.14s; }
-.beam-4  { transform: rotate(90deg);  animation-delay: 0.16s; }
-.beam-5  { transform: rotate(120deg); animation-delay: 0.18s; }
-.beam-6  { transform: rotate(150deg); animation-delay: 0.20s; }
-.beam-7  { transform: rotate(180deg); animation-delay: 0.22s; }
-.beam-8  { transform: rotate(210deg); animation-delay: 0.24s; }
-.beam-9  { transform: rotate(240deg); animation-delay: 0.26s; }
-.beam-10 { transform: rotate(270deg); animation-delay: 0.28s; }
-.beam-11 { transform: rotate(300deg); animation-delay: 0.30s; }
-.beam-12 { transform: rotate(330deg); animation-delay: 0.32s; }
+.beam-1  { transform: rotate(0deg);   animation-delay: 0.05s; }
+.beam-2  { transform: rotate(45deg);  animation-delay: 0.10s; }
+.beam-3  { transform: rotate(90deg);  animation-delay: 0.15s; }
+.beam-4  { transform: rotate(135deg); animation-delay: 0.20s; }
+.beam-5  { transform: rotate(180deg); animation-delay: 0.25s; }
+.beam-6  { transform: rotate(225deg); animation-delay: 0.30s; }
+.beam-7  { transform: rotate(270deg); animation-delay: 0.35s; }
+.beam-8  { transform: rotate(315deg); animation-delay: 0.40s; }
 
-/* Sharp-Edged ENGINEERING Typography */
+/* Sharp-Edged ENGINEERING Typography - ONLY Text on Screen */
 .intro-title {
   font-family: var(--font-sharp);
-  font-size: 5rem;
+  font-size: 5.4rem;
   font-weight: 900;
-  letter-spacing: 14px;
+  letter-spacing: 16px;
   text-transform: uppercase;
   color: #ffffff;
   z-index: 5;
@@ -241,18 +210,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  /* Glossy Neon White Laser Text Shadow - Pure white sharp emission */
+  /* Glossy Neon White Laser Text Shadow - Sharp white emission directly from letters */
   text-shadow: 
     0 0 2px #ffffff,
     0 0 6px #ffffff,
     0 0 14px #ffffff,
     0 0 28px rgba(255, 255, 255, 0.95),
-    0 0 50px rgba(255, 255, 255, 0.8),
-    0 0 85px rgba(255, 255, 255, 0.6);
+    0 0 55px rgba(255, 255, 255, 0.8),
+    0 0 90px rgba(255, 255, 255, 0.6);
     
   opacity: 0;
-  transform: translate3d(0, 0, -200px) scale(0.3);
-  animation: wormholeSharpExit 1.6s cubic-bezier(0.15, 0.85, 0.35, 1.05) forwards;
+  transform: translate3d(0, 0, -300px) scale(0.2);
+  animation: wormholeSharpExit 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
 }
 
@@ -264,7 +233,6 @@ body {
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   position: relative;
-  transition: text-shadow 0.3s ease;
 }
 
 /* Glossy light sweep overlay on title letters */
@@ -277,58 +245,28 @@ body {
   height: 100%;
   background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 100%);
   transform: skewX(-25deg);
-  animation: glossyLaserSweep 1.8s ease-in-out infinite 0.6s;
+  animation: glossyLaserSweep 1.6s ease-in-out infinite 0.4s;
   pointer-events: none;
   mix-blend-mode: overlay;
-}
-
-.intro-subtitle {
-  font-family: var(--font-sharp);
-  font-size: 1.1rem;
-  color: #ffffff;
-  text-shadow: 0 0 12px #ffffff, 0 0 25px rgba(255, 255, 255, 0.8);
-  margin-top: 24px;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  font-weight: 700;
-  opacity: 0;
-  z-index: 5;
-  animation: fadeIn 0.4s ease forwards 0.8s;
-  text-rendering: geometricPrecision;
 }
 
 @keyframes wormholeSharpExit {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, -300px) scale(0.25);
+    transform: translate3d(0, 0, -400px) scale(0.18);
     letter-spacing: 4px;
   }
-  50% {
+  60% {
     opacity: 1;
   }
-  85% {
-    transform: translate3d(0, 0, 0) scale(1.04);
-    letter-spacing: 16px;
+  90% {
+    transform: translate3d(0, 0, 0) scale(1.03);
+    letter-spacing: 17px;
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-    letter-spacing: 14px;
-  }
-}
-
-@keyframes wormholeTunnelPulse {
-  0% {
-    opacity: 0.95;
-    transform: scale(0.25);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-  100% {
-    opacity: 0.15;
-    transform: scale(2.2);
+    letter-spacing: 16px;
   }
 }
 
@@ -337,32 +275,17 @@ body {
     opacity: 0;
     width: 0;
   }
-  35% {
+  40% {
     opacity: 1;
-    width: 45vw;
+    width: 50vw;
   }
-  75% {
-    opacity: 0.95;
+  80% {
+    opacity: 0.9;
     width: 80vw;
   }
   100% {
-    opacity: 0.45;
-    width: 90vw;
-  }
-}
-
-@keyframes laserCenterCore {
-  0% {
-    transform: scale(0.1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(2.0);
-    opacity: 0.95;
-  }
-  100% {
-    transform: scale(3.8);
-    opacity: 0.15;
+    opacity: 0.4;
+    width: 85vw;
   }
 }
 
