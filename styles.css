@@ -8,8 +8,8 @@
   --card-border: rgba(255, 255, 255, 0.12);
   --card-border-glow: rgba(160, 224, 255, 0.4);
   
-  --quad-radius: 28px;
-  --quad-radius-sm: 18px;
+  --quad-radius: 0px;
+  --quad-radius-sm: 0px;
 
   /* White Neon Matte Light Typography */
   --neon-white: #ffffff;
@@ -106,7 +106,7 @@ body {
   padding: 4px 10px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 20px;
+  border-radius: 0px;
   color: var(--neon-accent-blue);
   text-shadow: none;
 }
@@ -399,7 +399,7 @@ body {
 .branch-box-badge {
   background: rgba(255, 255, 255, 0.08);
   padding: 4px 10px;
-  border-radius: 12px;
+  border-radius: 0px;
   color: #cbd5e1;
 }
 
@@ -536,7 +536,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: 0px;
   background: #0f172a;
   color: #ffffff;
 }
@@ -565,7 +565,7 @@ body {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-left: 4px solid #0f172a;
-  border-radius: 12px;
+  border-radius: 0px;
   padding: 14px 18px;
   font-weight: 600;
   color: #1e293b;
@@ -595,7 +595,7 @@ body {
   color: #fff;
   display: inline-block;
   padding: 4px 12px;
-  border-radius: 12px;
+  border-radius: 0px;
   margin-bottom: 12px;
 }
 
@@ -962,7 +962,7 @@ body {
   font-size: 0.7rem;
   font-weight: 800;
   padding: 3px 8px;
-  border-radius: 12px;
+  border-radius: 0px;
   background: rgba(128, 191, 255, 0.2);
   color: var(--neon-accent-blue);
   border: 1px solid rgba(128, 191, 255, 0.4);
@@ -1026,7 +1026,7 @@ body {
   gap: 8px;
   padding: 8px 12px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border-radius: 0px;
   border: 1px dashed rgba(255, 255, 255, 0.15);
 }
 
@@ -1080,7 +1080,7 @@ body {
 .percentage-badge-box {
   background: rgba(128, 191, 255, 0.12);
   border: 1px solid rgba(128, 191, 255, 0.4);
-  border-radius: 12px;
+  border-radius: 0px;
   padding: 10px 16px;
   font-weight: 700;
   color: #ffffff;
@@ -1099,7 +1099,7 @@ body {
 .toggle-group-container {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--quad-radius-sm);
+  border-radius: 0px;
   padding: 16px;
   margin-bottom: 16px;
 }
@@ -1114,7 +1114,7 @@ body {
 .toggle-btn-group {
   display: flex;
   background: rgba(0, 0, 0, 0.4);
-  border-radius: 20px;
+  border-radius: 0px;
   padding: 3px;
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
@@ -1124,7 +1124,7 @@ body {
   border: none;
   color: #94a3b8;
   padding: 6px 16px;
-  border-radius: 16px;
+  border-radius: 0px;
   font-size: 0.85rem;
   font-weight: 800;
   cursor: pointer;

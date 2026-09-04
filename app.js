@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainGalleryView = document.getElementById('mainGalleryView');
   const branchDetailView = document.getElementById('branchDetailView');
   const sourcesView = document.getElementById('sourcesView');
+  const jobsView = document.getElementById('jobsView');
   const branchesContainer = document.getElementById('branchesContainer');
   const modalBackdrop = document.getElementById('profileModal');
   const modalTriggerBtn = document.getElementById('openModalBtn');
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 1. View Routing System
   const showView = (targetViewId) => {
-    [mainGalleryView, branchDetailView, sourcesView].forEach(v => {
+    [mainGalleryView, branchDetailView, sourcesView, jobsView].forEach(v => {
       if (v) {
         v.classList.remove('active');
         v.style.display = 'none';
@@ -84,11 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('menuLinkJobs')?.addEventListener('click', (e) => {
     e.preventDefault();
-    showView('mainGalleryView');
-    setTimeout(() => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }, 200);
-    closeNavMenu();
+    showView('jobsView');
   });
 
   document.getElementById('menuLinkSources')?.addEventListener('click', (e) => {
@@ -104,6 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('backFromSourcesBtn')?.addEventListener('click', () => {
+    showView('mainGalleryView');
+  });
+
+  document.getElementById('backFromJobsBtn')?.addEventListener('click', () => {
     showView('mainGalleryView');
   });
 
@@ -234,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const box3 = document.createElement('div');
     box3.className = 'quad-white-box';
     const projectItems = spec.projectsAndSkills.projects.map(p => `<li class="white-box-list-item">🚀 ${p}</li>`).join('');
-    const skillBadges = spec.projectsAndSkills.skills.map(s => `<span style="background: #0f172a; color: #fff; padding: 6px 12px; border-radius: 16px; font-size: 0.85rem; font-weight: 600; display: inline-block; margin: 4px;">${s}</span>`).join('');
+    const skillBadges = spec.projectsAndSkills.skills.map(s => `<span style="background: #0f172a; color: #fff; padding: 6px 12px; border-radius: 0px; font-size: 0.85rem; font-weight: 600; display: inline-block; margin: 4px;">${s}</span>`).join('');
     box3.innerHTML = `
       <div class="white-box-header">
         <h3 class="white-box-title">Projects, Portfolio & Skills Required</h3>
@@ -248,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ${projectItems}
         </ul>
 
-        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 16px;">
+        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 0px; padding: 16px;">
           <strong>💡 Portfolio & Resume Guidance:</strong> ${spec.projectsAndSkills.portfolioAdvice}
         </div>
       </div>
@@ -257,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Box 4: Career Options & Placements
     const box4 = document.createElement('div');
     box4.className = 'quad-white-box';
-    const rolesList = spec.careersAndPlacements.roles.map(r => `<span style="background: #e2e8f0; color: #0f172a; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; display: inline-block; margin: 4px;">${r}</span>`).join('');
+    const rolesList = spec.careersAndPlacements.roles.map(r => `<span style="background: #e2e8f0; color: #0f172a; padding: 6px 14px; border-radius: 0px; font-weight: 700; font-size: 0.9rem; display: inline-block; margin: 4px;">${r}</span>`).join('');
     const recruitersList = spec.careersAndPlacements.topRecruiters.join(', ');
     box4.innerHTML = `
       <div class="white-box-header">
@@ -268,11 +269,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="margin-bottom: 20px;">${rolesList}</div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
-          <div style="background: #f1f5f9; padding: 20px; border-radius: 16px;">
+          <div style="background: #f1f5f9; padding: 20px; border-radius: 0px;">
             <h5 style="color: #64748b; font-size: 0.85rem; font-weight: 800; text-transform: uppercase;">Average Salary Bracket</h5>
             <p style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-top: 6px;">${spec.careersAndPlacements.salaryRange}</p>
           </div>
-          <div style="background: #f1f5f9; padding: 20px; border-radius: 16px;">
+          <div style="background: #f1f5f9; padding: 20px; border-radius: 0px;">
             <h5 style="color: #64748b; font-size: 0.85rem; font-weight: 800; text-transform: uppercase;">Top Industry Recruiters</h5>
             <p style="font-size: 1rem; font-weight: 600; color: #0f172a; margin-top: 6px;">${recruitersList}</p>
           </div>
@@ -375,17 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
   modalBackdrop?.addEventListener('click', (e) => {
     if (e.target === modalBackdrop) closeModal();
   });
-
-  // 2-Minute Popup Timer
-  const timerInterval = setInterval(() => {
-    timerCountdown--;
-    if (timerCountdown <= 0) {
-      clearInterval(timerInterval);
-      if (!modalBackdrop.classList.contains('active')) {
-        openModal();
-      }
-    }
-  }, 1000);
 
   // Real-Time Percentage Calculators
   const calculateClassXPercentage = () => {
