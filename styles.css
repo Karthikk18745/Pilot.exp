@@ -163,25 +163,23 @@ body {
   pointer-events: none;
 }
 
-/* Sharp-Edged ENGINEERING Typography - ONLY Text on Arrival Screen */
+/* Sharp-Edged ENGINEERING Typography - Glossy Specular Finish (ZERO BLUR) */
 .intro-title {
   font-family: var(--font-sharp);
   font-size: 5.4rem;
   font-weight: 900;
   letter-spacing: 16px;
   text-transform: uppercase;
-  color: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 46%, #94a3b8 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   z-index: 5;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  /* Glossy Neon White Laser Text Shadow - Sharp white emission directly from letters */
-  text-shadow: 
-    0 0 4px #ffffff,
-    0 0 12px #ffffff,
-    0 0 24px rgba(255, 255, 255, 0.95),
-    0 0 50px rgba(255, 255, 255, 0.75);
+  /* Razor-sharp glossy edge highlight - ZERO BLUR */
+  filter: drop-shadow(0 0 1px #ffffff);
     
   opacity: 0;
   transform: translateZ(0) scale(0.2);
@@ -194,7 +192,9 @@ body {
   display: inline-block;
   font-family: var(--font-sharp);
   font-weight: 900;
-  color: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 46%, #94a3b8 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   position: relative;
