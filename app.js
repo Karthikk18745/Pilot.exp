@@ -16,14 +16,98 @@ document.addEventListener('DOMContentLoaded', () => {
   const introOverlay = document.getElementById('introOverlay');
   const mainGalleryView = document.getElementById('mainGalleryView');
   const branchDetailView = document.getElementById('branchDetailView');
+  const sourcesView = document.getElementById('sourcesView');
   const branchesContainer = document.getElementById('branchesContainer');
   const modalBackdrop = document.getElementById('profileModal');
   const modalTriggerBtn = document.getElementById('openModalBtn');
   const modalCloseBtn = document.getElementById('closeModalBtn');
-  const profileForm = document.getElementById('profileForm');
-  const analysisResultBox = document.getElementById('analysisResultBox');
+  const signInForm = document.getElementById('signInForm');
+  const signInSuccessMsg = document.getElementById('signInSuccessMsg');
 
-  // 1. Intro Animation Dismissal
+  // Hamburger Menu Elements
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const navMenuDrawer = document.getElementById('navMenuDrawer');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+  const closeNavMenuBtn = document.getElementById('closeNavMenuBtn');
+
+  // 1. View Routing System
+  const showView = (targetViewId) => {
+    [mainGalleryView, branchDetailView, sourcesView].forEach(v => {
+      if (v) {
+        v.classList.remove('active');
+        v.style.display = 'none';
+      }
+    });
+
+    const targetView = document.getElementById(targetViewId);
+    if (targetView) {
+      targetView.style.display = 'block';
+      targetView.classList.add('active');
+    }
+
+    closeNavMenu();
+    window.scrollTo(0, 0);
+  };
+
+  // Hamburger Drawer Actions
+  const openNavMenu = () => {
+    if (navMenuDrawer && menuBackdrop && hamburgerBtn) {
+      navMenuDrawer.classList.add('active');
+      menuBackdrop.classList.add('active');
+      hamburgerBtn.classList.add('active');
+    }
+  };
+
+  const closeNavMenu = () => {
+    if (navMenuDrawer && menuBackdrop && hamburgerBtn) {
+      navMenuDrawer.classList.remove('active');
+      menuBackdrop.classList.remove('active');
+      hamburgerBtn.classList.remove('active');
+    }
+  };
+
+  if (hamburgerBtn) hamburgerBtn.addEventListener('click', openNavMenu);
+  if (closeNavMenuBtn) closeNavMenuBtn.addEventListener('click', closeNavMenu);
+  if (menuBackdrop) menuBackdrop.addEventListener('click', closeNavMenu);
+
+  // Menu Link Click Handlers
+  document.getElementById('menuLinkHome')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    showView('mainGalleryView');
+  });
+
+  document.getElementById('menuLinkCollegePriorities')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    alert('🏛️ College Priorities Configuration: This section will be updated with college cutoff preferences and NIRF priority lists in upcoming sessions.');
+    closeNavMenu();
+  });
+
+  document.getElementById('menuLinkJobs')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    showView('mainGalleryView');
+    setTimeout(() => {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 200);
+    closeNavMenu();
+  });
+
+  document.getElementById('menuLinkSources')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    renderSourcesTree();
+    showView('sourcesView');
+  });
+
+  document.getElementById('menuLinkSignIn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeNavMenu();
+    openModal();
+  });
+
+  document.getElementById('backFromSourcesBtn')?.addEventListener('click', () => {
+    showView('mainGalleryView');
+  });
+
+  // 2. Intro Animation Dismissal
   const dismissIntro = () => {
     if (introOverlay && !introOverlay.classList.contains('fade-out')) {
       introOverlay.classList.add('fade-out');
@@ -33,12 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Auto dismiss intro smoothly after 2000ms
   setTimeout(dismissIntro, 2000);
   introOverlay.addEventListener('click', dismissIntro);
   window.addEventListener('keydown', dismissIntro);
 
-  // 2. Render Main 4-Box Engineering Branches Horizontal Gallery
+  // 3. Render Main 4-Box Engineering Branches Horizontal Gallery
   const renderBranchesGallery = () => {
     branchesContainer.innerHTML = '';
 
@@ -77,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Open Branch Detail View (Short overview + Specialization Boxes)
+  // 4. Open Branch Detail View
   const openBranchDetail = (branchId) => {
     const branch = getBranchById(branchId);
     if (!branch) return;
@@ -85,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
     currentBranch = branch;
     currentSpecialization = null;
 
-    // Render Overview & Specializations Selector
     document.getElementById('branchOverviewTitle').textContent = branch.name;
     document.getElementById('branchOverviewTagline').textContent = branch.tagline;
     document.getElementById('branchOverviewText').textContent = branch.description;
@@ -107,20 +189,11 @@ document.addEventListener('DOMContentLoaded', () => {
       specsContainer.appendChild(specCard);
     });
 
-    // Clear previous deep dive section
     document.getElementById('specializationDeepDive').innerHTML = '';
-
-    // Switch View
-    mainGalleryView.classList.remove('active');
-    mainGalleryView.style.display = 'none';
-
-    branchDetailView.style.display = 'block';
-    branchDetailView.classList.add('active');
-
-    window.scrollTo(0, 0);
+    showView('branchDetailView');
   };
 
-  // 4. Render Specialization Deep-Dive in White Quad-Curve Boxes (Black Text)
+  // 5. Render Specialization Deep-Dive
   const renderSpecializationDeepDive = (spec) => {
     currentSpecialization = spec;
     const container = document.getElementById('specializationDeepDive');
@@ -157,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    // Box 3: Projects, Portfolio, Internships & Skills
+    // Box 3: Projects & Skills
     const box3 = document.createElement('div');
     box3.className = 'quad-white-box';
     const projectItems = spec.projectsAndSkills.projects.map(p => `<li class="white-box-list-item">🚀 ${p}</li>`).join('');
@@ -207,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    // Box 5: Step-by-Step 4-Year Student Roadmap
+    // Box 5: Roadmap Timeline
     const box5 = document.createElement('div');
     box5.className = 'quad-white-box';
     const roadmapCards = spec.roadmap.map(step => `
@@ -237,57 +310,167 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.appendChild(box5);
 
     container.appendChild(wrapper);
-
-    // Scroll to the specialization detail section instantly
     container.scrollIntoView({ behavior: 'auto' });
   };
 
   // Back Button Event
-  document.getElementById('backToGalleryBtn').addEventListener('click', () => {
-    branchDetailView.classList.remove('active');
-    branchDetailView.style.display = 'none';
-
-    mainGalleryView.style.display = 'block';
-    mainGalleryView.classList.add('active');
-
-    window.scrollTo(0, 0);
+  document.getElementById('backToGalleryBtn')?.addEventListener('click', () => {
+    showView('mainGalleryView');
   });
 
-  // 5. Modal Trigger & Timed Popup Handler (2 Minutes = 120 Seconds)
+  // 6. Render Sources Tree View (Branches > Specializations > Tutorials & Links)
+  const renderSourcesTree = () => {
+    const container = document.getElementById('sourcesTreeContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    ENGINEERING_BRANCHES.forEach(branch => {
+      const card = document.createElement('div');
+      card.className = 'sources-branch-card';
+
+      const specsHTML = branch.specializations.map(spec => `
+        <div class="sources-spec-box">
+          <h4 class="sources-spec-name">📍 ${spec.name}</h4>
+          <ul class="sources-links-list">
+            <li class="sources-link-item">
+              <span>📺</span>
+              <div>
+                <strong>YouTube Playlists & Video Tutorials:</strong><br>
+                <span style="font-size: 0.82rem; color: #94a3b8;">Full curriculum lectures & hands-on tutorials for ${spec.name} (Links to be updated in upcoming session).</span>
+              </div>
+            </li>
+            <li class="sources-link-item">
+              <span>📚</span>
+              <div>
+                <strong>Reference Repositories & Study Notes:</strong><br>
+                <span style="font-size: 0.82rem; color: #94a3b8;">Open-source projects, lab manuals, and exam preparation notes.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      `).join('');
+
+      card.innerHTML = `
+        <h3 class="sources-branch-title">🎓 ${branch.name} (${branch.shortName})</h3>
+        <div class="sources-spec-grid">
+          ${specsHTML}
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  };
+
+  // 7. Modal & Registration System Handlers
   const openModal = () => {
-    modalBackdrop.classList.add('active');
+    modalBackdrop?.classList.add('active');
   };
   const closeModal = () => {
-    modalBackdrop.classList.remove('active');
+    modalBackdrop?.classList.remove('active');
   };
 
-  const skipModalBtn = document.getElementById('skipModalBtn');
-  if (skipModalBtn) {
-    skipModalBtn.addEventListener('click', closeModal);
-  }
-
-  modalTriggerBtn.addEventListener('click', openModal);
-  modalCloseBtn.addEventListener('click', closeModal);
-  modalBackdrop.addEventListener('click', (e) => {
+  document.getElementById('skipModalBtn')?.addEventListener('click', closeModal);
+  modalTriggerBtn?.addEventListener('click', openModal);
+  modalCloseBtn?.addEventListener('click', closeModal);
+  modalBackdrop?.addEventListener('click', (e) => {
     if (e.target === modalBackdrop) closeModal();
   });
 
-  // 2-Minute Popup Countdown Timer
+  // 2-Minute Popup Timer
   const timerInterval = setInterval(() => {
     timerCountdown--;
     if (timerCountdown <= 0) {
       clearInterval(timerInterval);
-      // Auto trigger modal after 2 minutes if user hasn't opened it yet
       if (!modalBackdrop.classList.contains('active')) {
         openModal();
       }
     }
   }, 1000);
 
-  // 6. Handle Optional Sign-In Form Submission
-  const signInForm = document.getElementById('signInForm');
-  const signInSuccessMsg = document.getElementById('signInSuccessMsg');
+  // Real-Time Percentage Calculators
+  const calculateClassXPercentage = () => {
+    const totalInput = document.getElementById('classXTotalMarks');
+    const scoredInput = document.getElementById('classXScoredMarks');
+    const percentVal = document.getElementById('classXPercentVal');
 
+    const total = parseFloat(totalInput?.value) || 0;
+    const scored = parseFloat(scoredInput?.value) || 0;
+
+    if (total > 0 && scored >= 0) {
+      const pct = ((scored / total) * 100).toFixed(2);
+      if (percentVal) percentVal.textContent = `${pct}%`;
+    } else {
+      if (percentVal) percentVal.textContent = '0.00%';
+    }
+  };
+
+  const calculateClassXIIPercentage = () => {
+    const totalInput = document.getElementById('classXIITotalMarks');
+    const scoredInput = document.getElementById('classXIIScoredMarks');
+    const percentVal = document.getElementById('classXIIPercentVal');
+
+    const total = parseFloat(totalInput?.value) || 0;
+    const scored = parseFloat(scoredInput?.value) || 0;
+
+    if (total > 0 && scored >= 0) {
+      const pct = ((scored / total) * 100).toFixed(2);
+      if (percentVal) percentVal.textContent = `${pct}%`;
+    } else {
+      if (percentVal) percentVal.textContent = '0.00%';
+    }
+  };
+
+  document.getElementById('classXTotalMarks')?.addEventListener('input', calculateClassXPercentage);
+  document.getElementById('classXScoredMarks')?.addEventListener('input', calculateClassXPercentage);
+  document.getElementById('classXIITotalMarks')?.addEventListener('input', calculateClassXIIPercentage);
+  document.getElementById('classXIIScoredMarks')?.addEventListener('input', calculateClassXIIPercentage);
+
+  // Yes / No Toggle Handler
+  const toggleButtons = document.querySelectorAll('.toggle-btn');
+  toggleButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetBoxId = btn.dataset.target;
+      const val = btn.dataset.value;
+      const parentGroup = btn.closest('.toggle-btn-group');
+      const targetBox = document.getElementById(targetBoxId);
+
+      if (parentGroup) {
+        parentGroup.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      if (targetBox) {
+        if (val === 'yes') {
+          targetBox.style.display = 'block';
+        } else {
+          targetBox.style.display = 'none';
+        }
+      }
+    });
+  });
+
+  // Auth Provider Selector Buttons
+  const authButtons = document.querySelectorAll('.auth-provider-btn');
+  authButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      authButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (btn.id === 'authBtnGoogle') {
+        const emailInput = document.getElementById('emailInput');
+        const nameInput = document.getElementById('fullNameInput');
+        if (emailInput && !emailInput.value) emailInput.value = 'student.google@gmail.com';
+        if (nameInput && !nameInput.value) nameInput.value = 'Google Authenticated Student';
+        alert('🌐 Google Authentication Simulated Successfully!');
+      } else if (btn.id === 'authBtnFacebook') {
+        alert('📘 Facebook Authentication Selected. Please complete mandatory fields indicated with (*).');
+      } else if (btn.id === 'authBtnX') {
+        alert('🐦 X (Twitter) Authentication Selected. Please complete mandatory fields indicated with (*).');
+      }
+    });
+  });
+
+  // Form Submission
   if (signInForm) {
     signInForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -296,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           closeModal();
           signInSuccessMsg.style.display = 'none';
-        }, 1500);
+        }, 1800);
       }
     });
   }

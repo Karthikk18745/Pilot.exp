@@ -23,15 +23,38 @@
   <div class="app-container">
     <!-- Navbar Header -->
     <header class="navbar">
-      <a href="#" class="brand-logo" onclick="window.location.reload(); return false;">
-        Realize.responsibly
-        <span class="brand-badge">Streams & Roadmaps</span>
-      </a>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Navigation Menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <a href="#" class="brand-logo" onclick="window.location.reload(); return false;">
+          Realize.responsibly
+          <span class="brand-badge">Streams & Roadmaps</span>
+        </a>
+      </div>
       <div class="nav-actions">
         <button class="btn-neon" id="openModalBtn">
           👤 Sign In / Account
         </button>
       </div>
+
+      <!-- Hamburger Slide-Out Navigation Menu Drawer -->
+      <div class="menu-backdrop" id="menuBackdrop"></div>
+      <nav class="nav-menu-drawer" id="navMenuDrawer">
+        <div class="menu-header">
+          <span class="menu-title">Navigation Menu</span>
+          <button class="menu-close-btn" id="closeNavMenuBtn">✕</button>
+        </div>
+        <ul class="menu-list">
+          <li class="menu-item"><a href="#" id="menuLinkHome" class="menu-link active">🏠 Home</a></li>
+          <li class="menu-item"><a href="#" id="menuLinkCollegePriorities" class="menu-link">🏛️ College Priorities <span class="menu-badge">Upcoming</span></a></li>
+          <li class="menu-item"><a href="#" id="menuLinkJobs" class="menu-link">💼 Job Opportunities & Careers</a></li>
+          <li class="menu-item"><a href="#" id="menuLinkSources" class="menu-link">📚 Sources & Video Tutorials</a></li>
+          <li class="menu-item"><a href="#" id="menuLinkSignIn" class="menu-link">👤 Student Registration / Sign In</a></li>
+        </ul>
+      </nav>
     </header>
 
     <!-- Main View 1: 4-Box Engineering Branches Carousel -->
@@ -83,53 +106,200 @@
       </div>
     </section>
 
-    <!-- Timed / Optional Sign-In Popup Modal -->
-    <div class="modal-backdrop" id="profileModal">
-      <div class="modal-card" style="text-align: center;">
-        <button class="modal-close-btn" id="closeModalBtn">✕</button>
-        <h2 class="modal-title">Welcome to Realize.responsibly</h2>
-        <p class="modal-subtitle">
-          Sign in to save your preferred engineering branches, bookmark roadmaps, and track career insights. (Completely optional)
+    <!-- Main View 3: Sources & Tutorials Index Page -->
+    <section id="sourcesView" class="view-container">
+      <div class="back-bar">
+        <button class="btn-neon" id="backFromSourcesBtn">← Back to Home</button>
+      </div>
+
+      <div class="branch-overview-hero">
+        <h1 class="branch-overview-title">Sources & Video Tutorials Index</h1>
+        <div class="branch-overview-tagline">Branches > Specializations > Tutorials & YouTube Playlists</div>
+        <p class="branch-overview-text">
+          Browse comprehensive video lectures, YouTube playlists, open-source documentation, and curated study materials organized hierarchically by branch and specialization.
         </p>
+      </div>
+
+      <div id="sourcesTreeContainer" class="sources-tree-wrapper">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- Comprehensive Student Profile & Registration Modal -->
+    <div class="modal-backdrop" id="profileModal">
+      <div class="modal-card">
+        <button class="modal-close-btn" id="closeModalBtn">✕</button>
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h2 class="modal-title">Student Profile Registration</h2>
+          <p class="modal-subtitle">
+            Sign in to save preferred engineering branches, track roadmaps, and store educational records.
+          </p>
+        </div>
 
         <form id="signInForm">
-          <!-- Social Sign In Options -->
-          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
-            <button type="button" class="btn-neon auth-btn" onclick="alert('Google Sign-In Simulated Successfully!')" style="justify-content: center; padding: 12px;">
-              🌐 Continue with Google
+          <!-- Auth Provider Selection -->
+          <div class="form-section-title">1. Sign-In Method</div>
+          <div class="auth-provider-grid">
+            <button type="button" class="auth-provider-btn" id="authBtnGoogle">
+              🌐 Google
             </button>
-            <button type="button" class="btn-neon auth-btn" onclick="alert('Facebook Sign-In Simulated Successfully!')" style="justify-content: center; padding: 12px;">
-              📘 Continue with Facebook
+            <button type="button" class="auth-provider-btn" id="authBtnFacebook">
+              📘 Facebook <span class="req-star">*</span>
             </button>
-            <button type="button" class="btn-neon auth-btn" onclick="alert('X (Twitter) Sign-In Simulated Successfully!')" style="justify-content: center; padding: 12px;">
-              🐦 Continue with X (Twitter)
+            <button type="button" class="auth-provider-btn" id="authBtnX">
+              🐦 X (Twitter) <span class="req-star">*</span>
             </button>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-            <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.15);"></div>
-            <span style="font-size: 0.85rem; color: #94a3b8;">OR WITH EMAIL / PHONE</span>
-            <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.15);"></div>
+          <!-- Personal Information -->
+          <div class="form-section-title">2. Personal Information</div>
+          <div class="form-group">
+            <label class="form-label" for="fullNameInput">Full Name <span class="req-star">*</span></label>
+            <input type="text" class="form-input" id="fullNameInput" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="emailInput">Email Address <span class="req-star">*</span></label>
+              <input type="email" class="form-input" id="emailInput" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="phoneInput">Mobile Number (Optional)</label>
+              <input type="tel" class="form-input" id="phoneInput" placeholder="10-digit mobile number">
+            </div>
+          </div>
+
+          <!-- Class X Educational Details -->
+          <div class="form-section-title">3. Class X Educational Details</div>
+          <div class="form-group">
+            <label class="form-label" for="classXBoard">Class X Education Board <span class="req-star">*</span></label>
+            <select class="form-select" id="classXBoard" required>
+              <option value="">Select Board</option>
+              <option value="CBSE">CBSE (Central Board of Secondary Education)</option>
+              <option value="ICSE">ICSE (Indian Certificate of Secondary Education)</option>
+              <option value="State">State Board</option>
+              <option value="Other">Other International / Recognized Board</option>
+            </select>
           </div>
 
           <div class="form-group">
-            <input type="email" class="form-input" placeholder="Email Address (Optional)" id="emailInput">
-          </div>
-          <div class="form-group">
-            <input type="tel" class="form-input" placeholder="Mobile Number (Optional)" id="phoneInput">
+            <label class="form-label" for="classXSchool">Class X School / Institute Name & Address (Optional)</label>
+            <input type="text" class="form-input" id="classXSchool" placeholder="e.g. St. Xavier's High School, City, State">
           </div>
 
-          <button type="submit" class="btn-neon" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; margin-top: 10px; background: var(--neon-accent-blue); color: #0f172a; font-weight: 800;">
-            Sign In / Create Account
+          <div class="grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="classXTotalMarks">Total Marks <span class="req-star">*</span></label>
+              <input type="number" class="form-input" id="classXTotalMarks" placeholder="e.g. 500 or 600" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="classXScoredMarks">Marks Scored <span class="req-star">*</span></label>
+              <input type="number" class="form-input" id="classXScoredMarks" placeholder="e.g. 465" min="0" required>
+            </div>
+          </div>
+          <div class="percentage-badge-box" id="classXPercentBadge">
+            Class X Calculated Percentage: <span id="classXPercentVal">0.00%</span>
+          </div>
+
+          <!-- Class XII / Intermediate Educational Details -->
+          <div class="form-section-title">4. Class XII / Intermediate Details</div>
+          <div class="form-group">
+            <label class="form-label" for="classXIIPattern">Class XII Board Structure <span class="req-star">*</span></label>
+            <select class="form-select" id="classXIIPattern" required>
+              <option value="12th_only">Class 12th Board Only (Main Final Exam)</option>
+              <option value="11th_12th_combined">Both Class 11th & 12th Combined (e.g. Intermediate / BIEAP)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="classXIISchool">Junior College / Institution Name & Address (Optional)</label>
+            <input type="text" class="form-input" id="classXIISchool" placeholder="e.g. Government Junior College, City, State">
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label class="form-label" for="classXIITotalMarks">Total Marks <span class="req-star">*</span></label>
+              <input type="number" class="form-input" id="classXIITotalMarks" placeholder="e.g. 1000 or 500" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="classXIIScoredMarks">Marks Scored <span class="req-star">*</span></label>
+              <input type="number" class="form-input" id="classXIIScoredMarks" placeholder="e.g. 940" min="0" required>
+            </div>
+          </div>
+          <div class="percentage-badge-box" id="classXIIPercentBadge">
+            Class XII / Intermediate Calculated Percentage: <span id="classXIIPercentVal">0.00%</span>
+          </div>
+
+          <!-- Achievements & Competitive Exams -->
+          <div class="form-section-title">5. Achievements & Competitive Exams</div>
+          
+          <!-- Academic Achievements -->
+          <div class="toggle-group-container">
+            <div class="toggle-row">
+              <span class="form-label" style="margin: 0;">Any Academic Achievements?</span>
+              <div class="toggle-btn-group">
+                <button type="button" class="toggle-btn" id="toggleAcademicNo" data-target="academicDetailsBox" data-value="no">No</button>
+                <button type="button" class="toggle-btn active" id="toggleAcademicYes" data-target="academicDetailsBox" data-value="yes">Yes</button>
+              </div>
+            </div>
+            <div class="toggle-detail-box" id="academicDetailsBox" style="display: none;">
+              <textarea class="form-input" id="academicText" rows="2" placeholder="Mention scholarships, Olympiads, ranks, or academic honors..."></textarea>
+            </div>
+          </div>
+
+          <!-- Technical Achievements -->
+          <div class="toggle-group-container">
+            <div class="toggle-row">
+              <span class="form-label" style="margin: 0;">Any Technical / Hackathon Achievements?</span>
+              <div class="toggle-btn-group">
+                <button type="button" class="toggle-btn" id="toggleTechNo" data-target="techDetailsBox" data-value="no">No</button>
+                <button type="button" class="toggle-btn active" id="toggleTechYes" data-target="techDetailsBox" data-value="yes">Yes</button>
+              </div>
+            </div>
+            <div class="toggle-detail-box" id="techDetailsBox" style="display: none;">
+              <textarea class="form-input" id="techText" rows="2" placeholder="Mention coding competitions, robotics awards, apps, or project builds..."></textarea>
+            </div>
+          </div>
+
+          <!-- Sports Achievements -->
+          <div class="toggle-group-container">
+            <div class="toggle-row">
+              <span class="form-label" style="margin: 0;">Any Sports Achievements?</span>
+              <div class="toggle-btn-group">
+                <button type="button" class="toggle-btn" id="toggleSportsNo" data-target="sportsDetailsBox" data-value="no">No</button>
+                <button type="button" class="toggle-btn active" id="toggleSportsYes" data-target="sportsDetailsBox" data-value="yes">Yes</button>
+              </div>
+            </div>
+            <div class="toggle-detail-box" id="sportsDetailsBox" style="display: none;">
+              <textarea class="form-input" id="sportsText" rows="2" placeholder="Mention district, state, national, or school sports achievements..."></textarea>
+            </div>
+          </div>
+
+          <!-- Past Competitive Exams -->
+          <div class="toggle-group-container">
+            <div class="toggle-row">
+              <span class="form-label" style="margin: 0;">Appeared in Competitive Entrance Exams?</span>
+              <div class="toggle-btn-group">
+                <button type="button" class="toggle-btn" id="toggleExamNo" data-target="examDetailsBox" data-value="no">No</button>
+                <button type="button" class="toggle-btn active" id="toggleExamYes" data-target="examDetailsBox" data-value="yes">Yes</button>
+              </div>
+            </div>
+            <div class="toggle-detail-box" id="examDetailsBox" style="display: none;">
+              <textarea class="form-input" id="examText" rows="2" placeholder="e.g. JEE Main: 98.5 Percentile, JEE Advanced AIR 4500, EAPCET Rank 1200..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-neon" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; margin-top: 24px; background: var(--neon-accent-blue); color: #0f172a; font-weight: 800;">
+            Submit Student Profile & Sign In
           </button>
         </form>
 
-        <button type="button" id="skipModalBtn" style="background: none; border: none; color: #94a3b8; font-size: 0.9rem; font-weight: 600; margin-top: 18px; cursor: pointer; text-decoration: underline;">
+        <button type="button" id="skipModalBtn" style="background: none; border: none; color: #94a3b8; font-size: 0.9rem; font-weight: 600; margin-top: 18px; cursor: pointer; text-decoration: underline; display: block; margin-left: auto; margin-right: auto;">
           Skip for Now & Continue Exploring
         </button>
 
         <div id="signInSuccessMsg" class="analysis-result-box" style="display: none; margin-top: 20px;">
-          🎉 Signed in successfully! Enjoy exploring streams and roadmaps.
+          🎉 Student profile saved and signed in successfully! Enjoy exploring streams and roadmaps.
         </div>
       </div>
     </div>
